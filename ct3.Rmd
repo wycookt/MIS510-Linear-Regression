@@ -1,0 +1,58 @@
+---
+title: "Module 3 CT Option 1"
+author: "Ty Cook"
+date: "4/4/2020"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+# Read into Data Frame
+```{r}
+housing.df <- read.csv("BostonHousing.csv", header = TRUE)
+```
+# Summary
+```{r}
+summary(housing.df)
+```
+# Data Exploration Functions
+```{r}
+data.frame(mean=sapply(housing.df[-c(14)],mean,na.rm=TRUE),
+sd=sapply(housing.df[-c(14)],sd,na.rm=TRUE), 
+min=sapply(housing.df[-c(14)],min,na.rm=TRUE),
+max=sapply(housing.df[-c(14)],max,na.rm=TRUE),
+median=sapply(housing.df[-c(14)],median,na.rm=TRUE),
+length=sapply(housing.df[-c(14)],length)
+)
+```
+# Select Variables
+```{r}
+selected.var <- c(1:13)
+```
+
+# Partition Data
+```{r}
+set.seed(1) 
+train.index <- sample(c(1:1000), 600)
+train.df <- housing.df[train.index, selected.var]
+valid.df <- housing.df[train.index, selected.var]
+```
+# Lm Function
+```{r}
+housing.lm <-lm(MEDV ~ ., data = train.df)
+```
+
+# Options
+```{r}
+options(scipen = 999)
+summary(housing.lm)
+```
+# Scatter Plot
+```{r echo=FALSE}
+plot(housing.df$AGE ~ housing.df$MEDV, xlab = "AGE", ylab = "MEDV")
+abline(lm(housing.df$AGE ~ housing.df$MEDV), col="red")
+```
